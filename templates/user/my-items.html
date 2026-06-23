@@ -1,0 +1,78 @@
+{% extends "user/base.html" %}
+
+{% block title %}My {{ 'Found' if found_items else 'Lost' }} Items{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>My {{ 'Found' if found_items else 'Lost' }} Items</h1>
+    <p>{{ 'Items you have found and reported' if found_items else 'Items you have lost and reported' }}</p>
+</div>
+
+<div class="items-table-container">
+    <div class="table-header">
+        <div class="panel-title">All {{ 'Found' if found_items else 'Lost' }} Items</div>
+        <a href="{{ url_for('report') }}" style="padding:10px 20px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Report New Item
+        </a>
+    </div>
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Item Name</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if items %}
+                {% for item in items %}
+                <tr>
+                    <td class="item-image-cell">
+                        <div class="item-image">
+                            {% if item.image %}
+                                <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="{{ item.name }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                            {% else %}
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.location }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>
+                        <span class="status-badge {{ 'status-lost' if item.status == 'Lost' else ('status-found' if item.status == 'Found' else ('status-pending' if item.status == 'Pending' else 'status-claimed')) }}">
+                            {{ item.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('item_detail', item_id=item.id) }}" class="action-btn-icon" style="text-decoration:none;color:inherit;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;opacity:0.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <br>No {{ 'found' if found_items else 'lost' }} items reported yet.
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

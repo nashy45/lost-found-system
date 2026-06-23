@@ -1,0 +1,49 @@
+{% extends "user/base.html" %}
+
+{% block title %}My Claims{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>My Claims</h1>
+    <p>Track the status of your item claims</p>
+</div>
+
+<div class="items-table-container">
+    <div class="table-header">
+        <div class="panel-title">All Claims</div>
+    </div>
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Claim Date</th>
+                <th>Status</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if claims %}
+                {% for claim in claims %}
+                <tr>
+                    <td style="font-weight:600;color:var(--gray-900);">{{ claim.item_name }}</td>
+                    <td>{{ claim.created_at[:10] if claim.created_at else '' }}</td>
+                    <td>
+                        <span class="status-badge {{ 'status-pending' if claim.status == 'Pending' else ('status-found' if claim.status == 'Approved' else 'status-lost') }}">
+                            {{ claim.status }}
+                        </span>
+                    </td>
+                    <td style="color:var(--gray-500);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ claim.message or '-' }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;opacity:0.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        <br>No claims yet. Browse found items to submit a claim.
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

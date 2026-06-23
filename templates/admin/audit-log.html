@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Audit Log - Admin Dashboard{% endblock %}
+
+{% block page_title %}Audit Log{% endblock %}
+
+{% block welcome_message %}Track all administrative actions{% endblock %}
+
+{% block content %}
+<div class="dashboard-panel">
+    <div class="panel-header">
+        <div class="panel-title">All Audit Entries</div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">Back to Dashboard</a>
+    </div>
+    {% if not audits %}
+        <p class="no-data">No audit entries yet. Administrative actions will be logged here.</p>
+    {% else %}
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Admin</th>
+                    <th>Note</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for audit in audits %}
+                <tr>
+                    <td>
+                        <span class="status-badge {{ 'status-lost' if audit.action == 'delete' else ('status-found' if audit.action == 'update' else 'status-pending') }}">
+                            {{ audit.action.title() }}
+                        </span>
+                    </td>
+                    <td>{{ audit.admin }}</td>
+                    <td>{{ audit.note or 'No additional notes' }}</td>
+                    <td>{{ audit.created_at[:19] if audit.created_at else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

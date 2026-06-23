@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="landing-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="nav-logo">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">Lost & Found</span>
+                        <span class="logo-subtitle">Management System</span>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-center">
+                <a href="#" class="nav-link active">Home</a>
+                <a href="{{ url_for('browse') }}" class="nav-link">Browse Items</a>
+                <a href="{{ url_for('report') }}" class="nav-link">Report Lost</a>
+                <a href="{{ url_for('report') }}" class="nav-link">Report Found</a>
+                <a href="{{ url_for('about') }}" class="nav-link">About</a>
+                <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('login') }}" class="btn-login">Login</a>
+                <a href="{{ url_for('register') }}" class="btn-register">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-left">
+                <h1>
+                    Reconnect People<br>
+                    With What Matters<br>
+                    <span class="highlight">Most.</span>
+                </h1>
+                <p>Report lost belongings, discover found items, and help build a stronger, more caring community through one simple platform.</p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('report') }}" class="btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        Report Lost Item
+                    </a>
+                    <a href="{{ url_for('browse') }}" class="btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        Browse Found Items
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="stat-icon-circle blue">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                        </div>
+                        <div class="stat-text">
+                            <strong>{{ total_items }}</strong>
+                            <span>Items Reported</span>
+                        </div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-icon-circle green">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="stat-text">
+                            <strong>{{ returned_items }}</strong>
+                            <span>Successfully Returned</span>
+                        </div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-icon-circle purple">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </div>
+                        <div class="stat-text">
+                            <strong>{{ recovery_rate }}%</strong>
+                            <span>Recovery Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="hero-illustration">
+                    <div class="hero-image-grid">
+                        <div class="hero-img-card large">
+                            <img src="{{ url_for('static', filename='images/wallets.jpg') }}" alt="Lost wallets">
+                            <div class="hero-img-overlay">
+                                <span class="hero-img-badge found">Found</span>
+                                <strong>Wallets</strong>
+                                <span>Library Building</span>
+                            </div>
+                        </div>
+                        <div class="hero-img-card">
+                            <img src="{{ url_for('static', filename='images/keys.jpg') }}" alt="Lost keys">
+                            <div class="hero-img-overlay">
+                                <span class="hero-img-badge lost">Lost</span>
+                                <strong>Car Keys</strong>
+                            </div>
+                        </div>
+                        <div class="hero-img-card">
+                            <img src="{{ url_for('static', filename='images/phone.jpg') }}" alt="Found phone">
+                            <div class="hero-img-overlay">
+                                <span class="hero-img-badge found">Found</span>
+                                <strong>Smartphone</strong>
+                            </div>
+                        </div>
+                        <div class="hero-img-card">
+                            <img src="{{ url_for('static', filename='images/headphones.jpg') }}" alt="Found headphones">
+                            <div class="hero-img-overlay">
+                                <span class="hero-img-badge lost">Lost</span>
+                                <strong>Headphones</strong>
+                            </div>
+                        </div>
+                        <div class="hero-img-card">
+                            <img src="{{ url_for('static', filename='images/passport.jpg') }}" alt="Found passport">
+                            <div class="hero-img-overlay">
+                                <span class="hero-img-badge found">Found</span>
+                                <strong>Passport</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gradient-blob blob-1"></div>
+                    <div class="gradient-blob blob-2"></div>
+                    <div class="gradient-blob blob-3"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">FEATURES</span>
+                <h2>Everything You Need in One Platform</h2>
+                <p>Comprehensive tools to help you recover lost items and help others find theirs</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </div>
+                    <h3>Smart Search</h3>
+                    <p>Quickly locate lost or found items using advanced filters and smart search capabilities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </div>
+                    <h3>Instant Reporting</h3>
+                    <p>Submit lost or found items in less than a minute with our easy-to-use forms.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>Secure Claim Process</h3>
+                    <p>Verify ownership before releasing any item through our secure claim system.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </div>
+                    <h3>Real-Time Notifications</h3>
+                    <p>Receive updates whenever someone reports a matching item to yours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">HOW IT WORKS</span>
+                <h2>Simple Steps to Reclaim Your Items</h2>
+                <p>Get started in minutes with our streamlined process</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="step-number blue">1</div>
+                    <div class="step-content">
+                        <h3>Report an Item</h3>
+                        <p>Submit details about your lost or found item with photos and descriptions.</p>
+                    </div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number green">2</div>
+                    <div class="step-content">
+                        <h3>Browse or Search Listings</h3>
+                        <p>Find matching items using smart filters and search functionality.</p>
+                    </div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number orange">3</div>
+                    <div class="step-content">
+                        <h3>Verify Ownership</h3>
+                        <p>Our team verifies ownership for secure and proper returns.</p>
+                    </div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number purple">4</div>
+                    <div class="step-content">
+                        <h3>Recover Your Belongings</h3>
+                        <p>Collect your item and reconnect with what matters most.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-icon-circle white">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="stat-number">{{ total_users }}</div>
+                <div class="stat-label">Registered Users</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon-circle white">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <div class="stat-number">{{ total_items }}</div>
+                <div class="stat-label">Items Reported</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon-circle white">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="stat-number">{{ returned_items }}</div>
+                <div class="stat-label">Items Successfully Returned</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon-circle white">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+                <div class="stat-number">{{ recovery_rate }}%</div>
+                <div class="stat-label">Recovery Rate</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Items Section -->
+    <section class="recent-items-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div>
+                    <span class="section-badge">LATEST ITEMS</span>
+                    <h2>Recently Lost & Found Items</h2>
+                </div>
+                <a href="{{ url_for('browse') }}" class="view-all-btn">View All Items</a>
+            </div>
+            <div class="items-grid">
+                <div class="item-card">
+                    <div class="item-image">
+                        <img src="{{ url_for('static', filename='images/wallets.jpg') }}" alt="Wallet">
+                    </div>
+                    <div class="item-content">
+                        <h3>Black Leather Wallet</h3>
+                        <div class="item-meta">
+                            <span>Wallets</span>
+                            <span>&bull;</span>
+                            <span>Library</span>
+                        </div>
+                        <div class="item-date">Dec 15, 2024</div>
+                        <span class="item-status lost">Lost</span>
+                    </div>
+                    <a href="{{ url_for('browse') }}" class="item-btn">View Details</a>
+                </div>
+                <div class="item-card">
+                    <div class="item-image">
+                        <img src="{{ url_for('static', filename='images/headphones.jpg') }}" alt="Headphones">
+                    </div>
+                    <div class="item-content">
+                        <h3>Sony Headphones</h3>
+                        <div class="item-meta">
+                            <span>Electronics</span>
+                            <span>&bull;</span>
+                            <span>Cafeteria</span>
+                        </div>
+                        <div class="item-date">Dec 14, 2024</div>
+                        <span class="item-status found">Found</span>
+                    </div>
+                    <a href="{{ url_for('browse') }}" class="item-btn">View Details</a>
+                </div>
+                <div class="item-card">
+                    <div class="item-image">
+                        <img src="{{ url_for('static', filename='images/keys.jpg') }}" alt="Keys">
+                    </div>
+                    <div class="item-content">
+                        <h3>Car Keys</h3>
+                        <div class="item-meta">
+                            <span>Keys</span>
+                            <span>&bull;</span>
+                            <span>Parking Lot</span>
+                        </div>
+                        <div class="item-date">Dec 13, 2024</div>
+                        <span class="item-status lost">Lost</span>
+                    </div>
+                    <a href="{{ url_for('browse') }}" class="item-btn">View Details</a>
+                </div>
+                <div class="item-card">
+                    <div class="item-image">
+                        <img src="{{ url_for('static', filename='images/passport.jpg') }}" alt="Passport">
+                    </div>
+                    <div class="item-content">
+                        <h3>Passport</h3>
+                        <div class="item-meta">
+                            <span>Documents</span>
+                            <span>&bull;</span>
+                            <span>Admin Office</span>
+                        </div>
+                        <div class="item-date">Dec 12, 2024</div>
+                        <span class="item-status found">Found</span>
+                    </div>
+                    <a href="{{ url_for('browse') }}" class="item-btn">View Details</a>
+                </div>
+                <div class="item-card">
+                    <div class="item-image">
+                        <img src="{{ url_for('static', filename='images/phone.jpg') }}" alt="Phone">
+                    </div>
+                    <div class="item-content">
+                        <h3>iPhone 14</h3>
+                        <div class="item-meta">
+                            <span>Electronics</span>
+                            <span>&bull;</span>
+                            <span>Gym</span>
+                        </div>
+                        <div class="item-date">Dec 11, 2024</div>
+                        <span class="item-status lost">Lost</span>
+                    </div>
+                    <a href="{{ url_for('browse') }}" class="item-btn">View Details</a>
+                </div>
+                <div class="item-card">
+                    <div class="item-image">
+                        <img src="{{ url_for('static', filename='images/computers.jpg') }}" alt="Laptop">
+                    </div>
+                    <div class="item-content">
+                        <h3>Blue Backpack</h3>
+                        <div class="item-meta">
+                            <span>Bags</span>
+                            <span>&bull;</span>
+                            <span>Classroom</span>
+                        </div>
+                        <div class="item-date">Dec 10, 2024</div>
+                        <span class="item-status found">Found</span>
+                    </div>
+                    <a href="{{ url_for('browse') }}" class="item-btn">View Details</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section">
+        <div class="why-container">
+            <div class="why-left">
+                <div class="why-illustration">
+                    <div class="why-image-collage">
+                        <div class="why-img main-img">
+                            <img src="{{ url_for('static', filename='images/headphones.jpg') }}" alt="Found items">
+                        </div>
+                        <div class="why-img secondary-img">
+                            <img src="{{ url_for('static', filename='images/keys.jpg') }}" alt="Lost keys">
+                        </div>
+                        <div class="why-img tertiary-img">
+                            <img src="{{ url_for('static', filename='images/passport.jpg') }}" alt="Documents">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="why-right">
+                <div class="section-header">
+                    <span class="section-badge">WHY CHOOSE US</span>
+                    <h2>A Community You Can Trust</h2>
+                    <p>We've built a platform that puts community first, making it easy for everyone to help each other recover lost belongings.</p>
+                </div>
+                <div class="checklist">
+                    <div class="checklist-item">
+                        <span class="check-icon">&#10003;</span>
+                        <span>Easy to use and accessible</span>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="check-icon">&#10003;</span>
+                        <span>Fast reporting and search process</span>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="check-icon">&#10003;</span>
+                        <span>Secure verification system</span>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="check-icon">&#10003;</span>
+                        <span>Real-time notifications</span>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="check-icon">&#10003;</span>
+                        <span>Community-driven recovery</span>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="check-icon">&#10003;</span>
+                        <span>Mobile-friendly experience</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <div class="cta-left">
+                <div class="cta-image-collage">
+                    <img src="{{ url_for('static', filename='images/wallets.jpg') }}" alt="Found items" class="cta-img cta-img-1">
+                    <img src="{{ url_for('static', filename='images/keys.jpg') }}" alt="Lost keys" class="cta-img cta-img-2">
+                </div>
+            </div>
+            <div class="cta-right">
+                <h2>Lost Something? Found Something? Let's Make It Right.</h2>
+                <p>Join thousands of community members helping return valuable belongings every day.</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('register') }}" class="btn-primary">Get Started</a>
+                    <a href="{{ url_for('browse') }}" class="btn-secondary">Browse Items</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    <span>Lost & Found</span>
+                </div>
+                <p>Helping communities reconnect with what matters most through innovative lost and found management.</p>
+                
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="#">Mission</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms</a>
+            </div>
+            <div class="footer-column">
+                <h4>Services</h4>
+                <a href="{{ url_for('report') }}">Report Lost Item</a>
+                <a href="{{ url_for('report') }}">Report Found Item</a>
+                <a href="{{ url_for('browse') }}">Browse Items</a>
+                <a href="#">Claims</a>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <a href="#">FAQ</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="#">Help Center</a>
+                <div class="contact-info">
+                    <span>support@lostfound.cm</span>
+                    <span>(+237) 6 93 74 23 71</span>
+                    <span>IUC - INSTITUTE UNIVERSITY OF THE COAST</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Lost & Found Management System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

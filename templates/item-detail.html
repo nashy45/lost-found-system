@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.name }} - Item Details{% endblock %}
+
+{% block content %}
+<section class="container page-header">
+    <h1>Item Details</h1>
+    <p>View complete information about this item</p>
+</section>
+
+<section class="container detail-container">
+    <div class="detail-card">
+        {% if item.image %}
+            <div class="detail-image">
+                <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="{{ item.name }}">
+            </div>
+        {% endif %}
+        
+        <div class="detail-info">
+            <span class="detail-badge" style="background: {{ '#ef4444' if item.status == 'Lost' else ('#10b981' if item.status == 'Found' else '#6b7280') }}; color: white; padding: 8px 16px; border-radius: 6px; display: inline-block; margin-bottom: 16px; font-size: 14px; font-weight: 600;">
+                {{ item.status }}
+            </span>
+            
+            <h2>{{ item.name }}</h2>
+            
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <strong>Type:</strong>
+                    <span>{{ item.type }}</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Location:</strong>
+                    <span>{{ item.location }}</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Date:</strong>
+                    <span>{{ item.date }}</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Reporter:</strong>
+                    <span>{{ item.reporter }}</span>
+                </div>
+                {% if item.email %}
+                <div class="detail-item">
+                    <strong>Contact:</strong>
+                    <span><a href="mailto:{{ item.email }}">{{ item.email }}</a></span>
+                </div>
+                {% endif %}
+                <div class="detail-item">
+                    <strong>Reported:</strong>
+                    <span>{{ item.created_at }}</span>
+                </div>
+            </div>
+            
+            {% if item.notes %}
+            <div class="detail-notes">
+                <strong>Additional Notes:</strong>
+                <p>{{ item.notes }}</p>
+            </div>
+            {% endif %}
+            
+            <div class="detail-actions">
+                <a href="{{ url_for('browse') }}" class="btn-secondary">Back to Browse</a>
+                {% if item.email %}
+                <a href="mailto:{{ item.email }}" class="btn-primary">Contact Reporter</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

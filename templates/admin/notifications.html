@@ -1,0 +1,69 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Notifications - Admin{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+{% block welcome_message %}Send and manage system notifications.{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div style="padding:14px 20px;border-radius:12px;margin-bottom:24px;font-size:14px;font-weight:500;background:{{ 'rgba(34,197,94,0.1)' if category == 'success' else 'rgba(239,68,68,0.1)' }};color:{{ '#22C55E' if category == 'success' else '#EF4444' }};border:1px solid {{ 'rgba(34,197,94,0.2)' if category == 'success' else 'rgba(239,68,68,0.2)' }};">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;">
+    <!-- Send Notification Form -->
+    <div style="background:white;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);padding:24px;height:fit-content;">
+        <h3 style="margin:0 0 20px 0;font-size:16px;font-weight:700;">Send Notification</h3>
+        <form method="POST" action="{{ url_for('admin_notifications') }}" style="display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:13px;font-weight:600;color:#374151;">Title</label>
+                <input type="text" name="title" required placeholder="Notification title" style="padding:12px 14px;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;outline:none;" onfocus="this.style.borderColor='#2563EB'" onblur="this.style.borderColor='#D1D5DB'">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:13px;font-weight:600;color:#374151;">Message</label>
+                <textarea name="message" rows="4" required placeholder="Notification message..." style="padding:12px 14px;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;" onfocus="this.style.borderColor='#2563EB'" onblur="this.style.borderColor='#D1D5DB'"></textarea>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:13px;font-weight:600;color:#374151;">Send To</label>
+                <select name="target" style="padding:12px 14px;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;outline:none;">
+                    <option value="all">All Users</option>
+                    <option value="students">Students Only</option>
+                    <option value="admins">Admins Only</option>
+                </select>
+            </div>
+            <button type="submit" style="padding:12px 20px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">Send Notification</button>
+        </form>
+    </div>
+
+    <!-- Notification History -->
+    <div style="background:white;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;">
+        <div style="padding:20px 24px;border-bottom:1px solid #E5E7EB;">
+            <h3 style="margin:0;font-size:16px;font-weight:700;">Notification History</h3>
+        </div>
+        {% if notifications %}
+            {% for notif in notifications %}
+            <div style="padding:16px 24px;border-bottom:1px solid #F3F4F6;display:flex;gap:16px;align-items:flex-start;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(37,99,235,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </div>
+                <div style="flex:1;">
+                    <div style="font-weight:600;color:#111827;">{{ notif.title }}</div>
+                    <div style="font-size:13px;color:#6B7280;margin-top:4px;">{{ notif.message }}</div>
+                    <div style="font-size:12px;color:#9CA3AF;margin-top:6px;">{{ notif.created_at[:16] if notif.created_at else '' }} &middot; {{ notif.target }}</div>
+                </div>
+                <form method="POST" action="{{ url_for('admin_notification_delete', notification_id=notif.id) }}">
+                    <button type="submit" style="padding:6px 10px;background:rgba(239,68,68,0.1);color:#EF4444;border:none;border-radius:6px;font-size:12px;cursor:pointer;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="padding:40px;text-align:center;color:#9CA3AF;">No notifications sent yet.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

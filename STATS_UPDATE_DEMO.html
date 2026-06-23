@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Update Stats Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 28px;
+        }
+        
+        .stat-icon.blue { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .stat-icon.red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        
+        .stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .controls {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 24px;
+        }
+        
+        .controls h2 {
+            margin-top: 0;
+            color: #111827;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 24px;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        @keyframes statPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .stat-updated {
+            animation: statPulse 0.6s ease-in-out;
+            color: #2563eb !important;
+        }
+        
+        .timestamp {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Auto-Update Statistics Demo</h1>
+            <p>Watch the statistics update automatically in real-time!</p>
+        </div>
+        
+        <div class="info-box">
+            <h3>
+                <span class="indicator"></span>
+                Status: Auto-updating every 3 seconds
+            </h3>
+            <ul class="feature-list">
+                <li>Statistics update automatically without page refresh</li>
+                <li>Smooth animations when values change</li>
+                <li>Visual feedback with pulse effect</li>
+                <li>Pauses when tab is hidden to save resources</li>
+            </ul>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📱</div>
+                <div class="stat-value" id="lostItems">45</div>
+                <div class="stat-label">Lost Items</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon green">✓</div>
+                <div class="stat-value" id="foundItems">80</div>
+                <div class="stat-label">Found Items</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon orange">⚡</div>
+                <div class="stat-value" id="claimedItems">15</div>
+                <div class="stat-label">Claimed Items</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon red">%</div>
+                <div class="stat-value" id="recoveryRate">53%</div>
+                <div class="stat-label">Recovery Rate</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <h2>Demo Controls</h2>
+            <p>Use these buttons to simulate changes and see the auto-update in action:</p>
+            <div class="button-group">
+                <button class="btn-success" onclick="increaseLost()">+ Lost Item</button>
+                <button class="btn-success" onclick="increaseFound()">+ Found Item</button>
+                <button class="btn-success" onclick="increaseClaimed()">+ Claimed Item</button>
+                <button class="btn-danger" onclick="decreaseLost()">- Lost Item</button>
+                <button class="btn-primary" onclick="randomUpdate()">🎲 Random Update</button>
+                <button class="btn-secondary" onclick="resetStats()">↻ Reset Stats</button>
+            </div>
+        </div>
+        
+        <div class="timestamp" id="timestamp">
+            Last updated: Never
+        </div>
+    </div>
+    
+    <script>
+        let stats = {
+            lost: 45,
+            found: 80,
+            claimed: 15
+        };
+        
+        function animateValue(element, start, end, duration = 600) {
+            const startTime = performance.now();
+            
+            const step = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (end - start) * easeOut);
+                
+                if (element.id === 'recoveryRate') {
+                    element.textContent = current + '%';
+                } else {
+                    element.textContent = current;
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            };
+            
+            requestAnimationFrame(step);
+        }
+        
+        function updateDisplay() {
+            const lostEl = document.getElementById('lostItems');
+            const foundEl = document.getElementById('foundItems');
+            const claimedEl = document.getElementById('claimedItems');
+            const recoveryEl = document.getElementById('recoveryRate');
+            
+            const oldLost = parseInt(lostEl.textContent);
+            const oldFound = parseInt(foundEl.textContent);
+            const oldClaimed = parseInt(claimedEl.textContent);
+            const total = stats.lost + stats.found + stats.claimed;
+            const oldRecovery = parseInt(recoveryEl.textContent);
+            const newRecovery = Math.round((stats.found / total) * 100);
+            
+            if (oldLost !== stats.lost) {
+                animateValue(lostEl, oldLost, stats.lost);
+                lostEl.classList.add('stat-updated');
+                setTimeout(() => lostEl.classList.remove('stat-updated'), 600);
+            }
+            
+            if (oldFound !== stats.found) {
+                animateValue(foundEl, oldFound, stats.found);
+                foundEl.classList.add('stat-updated');
+                setTimeout(() => foundEl.classList.remove('stat-updated'), 600);
+            }
+            
+            if (oldClaimed !== stats.claimed) {
+                animateValue(claimedEl, oldClaimed, stats.claimed);
+                claimedEl.classList.add('stat-updated');
+                setTimeout(() => claimedEl.classList.remove('stat-updated'), 600);
+            }
+            
+            if (oldRecovery !== newRecovery) {
+                animateValue(recoveryEl, oldRecovery, newRecovery);
+                recoveryEl.classList.add('stat-updated');
+                setTimeout(() => recoveryEl.classList.remove('stat-updated'), 600);
+            }
+            
+            updateTimestamp();
+        }
+        
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                `Last updated: ${now.toLocaleTimeString()}`;
+        }
+        
+        function increaseLost() {
+            stats.lost++;
+            updateDisplay();
+        }
+        
+        function increaseFound() {
+            stats.found++;
+            updateDisplay();
+        }
+        
+        function increaseClaimed() {
+            stats.claimed++;
+            updateDisplay();
+        }
+        
+        function decreaseLost() {
+            if (stats.lost > 0) {
+                stats.lost--;
+                updateDisplay();
+            }
+        }
+        
+        function randomUpdate() {
+            const operations = [
+                () => stats.lost += Math.floor(Math.random() * 5),
+                () => stats.found += Math.floor(Math.random() * 5),
+                () => stats.claimed += Math.floor(Math.random() * 3),
+                () => stats.lost = Math.max(0, stats.lost - Math.floor(Math.random() * 3))
+            ];
+            
+            const randomOp = operations[Math.floor(Math.random() * operations.length)];
+            randomOp();
+            updateDisplay();
+        }
+        
+        function resetStats() {
+            stats = {
+                lost: 45,
+                found: 80,
+                claimed: 15
+            };
+            updateDisplay();
+        }
+        
+        // Simulate auto-update every 3 seconds
+        setInterval(() => {
+            if (!document.hidden) {
+                // Randomly update one stat
+                if (Math.random() > 0.7) {
+                    randomUpdate();
+                }
+            }
+        }, 3000);
+        
+        // Pause/resume on visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                console.log('Tab visible - resuming updates');
+            } else {
+                console.log('Tab hidden - pausing updates');
+            }
+        });
+    </script>
+</body>
+</html>

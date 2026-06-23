@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}About - School Lost & Found{% endblock %}
+
+{% block content %}
+<section class="container page-header">
+    <h1>About This System</h1>
+    <p>Learn more about the School Lost & Found Management System</p>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <h2>Project Overview</h2>
+    </div>
+    <div class="info-card">
+        <p>This School Lost & Found Management System is a final-year project designed to help educational institutions efficiently track and manage lost and found items. The system provides a user-friendly interface for students, teachers, and staff to report lost or found items, browse current listings, and manage their personal reports.</p>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <h2>Key Features</h2>
+    </div>
+    <div class="feature-grid">
+        <article class="info-card">
+            <h3>Easy Reporting</h3>
+            <p>Simple form-based reporting system with image upload support</p>
+        </article>
+        <article class="info-card">
+            <h3>User Dashboard</h3>
+            <p>Personal dashboard to track your reports and view statistics</p>
+        </article>
+        <article class="info-card">
+            <h3>Admin Management</h3>
+            <p>Comprehensive admin panel for managing all items and users</p>
+        </article>
+        <article class="info-card">
+            <h3>Search & Browse</h3>
+            <p>Browse all items with filtering and search capabilities</p>
+        </article>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <h2>Technology Stack</h2>
+    </div>
+    <div class="info-card">
+        <p><strong>Backend:</strong> Python Flask<br>
+        <strong>Database:</strong> SQLite<br>
+        <strong>Frontend:</strong> HTML5, CSS3, JavaScript<br>
+        <strong>Authentication:</strong> Flask Sessions with password hashing</p>
+    </div>
+</section>
+{% endblock %}

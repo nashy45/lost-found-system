@@ -1,0 +1,47 @@
+{% extends "user/base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>My Profile</h1>
+    <p>View and update your profile information</p>
+</div>
+
+<div class="dashboard-panel" style="max-width: 700px;">
+    <div style="display:flex;align-items:center;gap:24px;padding-bottom:24px;border-bottom:1px solid var(--gray-200);margin-bottom:24px;">
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;color:white;font-size:28px;font-weight:700;flex-shrink:0;">
+            {{ user.name[:2].upper() }}
+        </div>
+        <div>
+            <h2 style="margin:0 0 4px 0;font-size:22px;color:var(--gray-900);">{{ user.name }}</h2>
+            <p style="margin:0 0 8px 0;font-size:14px;color:var(--gray-500);">{{ user.email }}</p>
+            <span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(37,99,235,0.1);color:var(--primary);">{{ user.role }}</span>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('user_profile_update') }}" style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="font-size:14px;font-weight:600;color:var(--gray-700);">Full Name</label>
+            <input type="text" name="name" value="{{ user.name }}" required style="padding:14px 16px;border:2px solid var(--gray-300);border-radius:12px;font-size:15px;font-family:inherit;color:var(--gray-900);outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--gray-300)'">
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="font-size:14px;font-weight:600;color:var(--gray-700);">Email Address</label>
+            <input type="email" name="email" value="{{ user.email }}" required style="padding:14px 16px;border:2px solid var(--gray-300);border-radius:12px;font-size:15px;font-family:inherit;color:var(--gray-900);outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--gray-300)'">
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="font-size:14px;font-weight:600;color:var(--gray-700);">Role</label>
+            <input type="text" value="{{ user.role }}" disabled style="padding:14px 16px;border:2px solid var(--gray-200);border-radius:12px;font-size:15px;font-family:inherit;color:var(--gray-400);background:var(--gray-50);">
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="font-size:14px;font-weight:600;color:var(--gray-700);">Member Since</label>
+            <input type="text" value="{{ user.created_at[:10] if user.created_at else 'N/A' }}" disabled style="padding:14px 16px;border:2px solid var(--gray-200);border-radius:12px;font-size:15px;font-family:inherit;color:var(--gray-400);background:var(--gray-50);">
+        </div>
+
+        <button type="submit" style="padding:14px 24px;border:none;border-radius:12px;font-size:15px;font-weight:700;color:white;background:linear-gradient(135deg,var(--primary),var(--primary-dark));cursor:pointer;transition:all 0.3s;box-shadow:var(--shadow);align-self:flex-start;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Update Profile</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Items - Admin Dashboard{% endblock %}
+
+{% block page_title %}Manage Items{% endblock %}
+
+{% block welcome_message %}View, update, and manage all reported items{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="success-banner">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="dashboard-panel">
+    <div class="panel-header">
+        <div class="panel-title">All Items</div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">Back to Dashboard</a>
+    </div>
+    {% if not items %}
+        <p class="no-data">No items reported yet. Items will appear here once users start reporting them.</p>
+    {% else %}
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Item Name</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Reporter</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td class="item-image-cell">
+                        {% if item.image %}
+                            <div class="item-image">
+                                <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="{{ item.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                            </div>
+                        {% else %}
+                            <div class="item-image">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.location }}</td>
+                    <td>{{ item.reporter }}</td>
+                    <td>
+                        <span class="status-badge {{ 'status-lost' if item.status == 'Lost' else ('status-found' if item.status == 'Found' else ('status-pending' if item.status == 'Pending' else 'status-claimed')) }}">
+                            {{ item.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin_item_update', item_id=item.id) }}" style="display: flex; gap: 8px; align-items: center;">
+                            <select name="status" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #E2E8F0; font-size: 13px;">
+                                <option value="Lost" {{ 'selected' if item.status == 'Lost' }}>Lost</option>
+                                <option value="Found" {{ 'selected' if item.status == 'Found' }}>Found</option>
+                                <option value="Claimed" {{ 'selected' if item.status == 'Claimed' }}>Claimed</option>
+                            </select>
+                            <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 13px;">Update</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin_item_delete', item_id=item.id) }}" onsubmit="return confirm('Are you sure you want to delete this item?');" style="margin-top: 8px;">
+                            <button type="submit" class="btn-secondary" style="padding: 6px 12px; font-size: 13px; background: #EF4444; color: white; border-color: #EF4444;">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

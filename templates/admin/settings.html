@@ -1,0 +1,73 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Settings - Admin{% endblock %}
+{% block page_title %}Settings{% endblock %}
+{% block welcome_message %}Manage your admin profile and system settings.{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div style="padding:14px 20px;border-radius:12px;margin-bottom:24px;font-size:14px;font-weight:500;background:{{ 'rgba(34,197,94,0.1)' if category == 'success' else 'rgba(239,68,68,0.1)' }};color:{{ '#22C55E' if category == 'success' else '#EF4444' }};border:1px solid {{ 'rgba(34,197,94,0.2)' if category == 'success' else 'rgba(239,68,68,0.2)' }};">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <!-- Admin Profile -->
+    <div style="background:white;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);padding:24px;">
+        <h3 style="margin:0 0 20px 0;font-size:16px;font-weight:700;">Admin Profile</h3>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #E5E7EB;">
+            <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);display:flex;align-items:center;justify-content:center;color:white;font-size:24px;font-weight:700;">
+                {{ session.get('name', 'AD')[:2].upper() }}
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:18px;color:#111827;">{{ session.get('name', 'Admin') }}</div>
+                <div style="font-size:14px;color:#6B7280;">System Administrator</div>
+            </div>
+        </div>
+        <form method="POST" action="{{ url_for('admin_settings') }}" style="display:flex;flex-direction:column;gap:16px;">
+            <input type="hidden" name="action" value="update_profile">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:13px;font-weight:600;color:#374151;">Name</label>
+                <input type="text" name="name" value="{{ admin.name }}" required style="padding:12px 14px;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;outline:none;" onfocus="this.style.borderColor='#2563EB'" onblur="this.style.borderColor='#D1D5DB'">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:13px;font-weight:600;color:#374151;">Email</label>
+                <input type="email" name="email" value="{{ admin.email }}" required style="padding:12px 14px;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;outline:none;" onfocus="this.style.borderColor='#2563EB'" onblur="this.style.borderColor='#D1D5DB'">
+            </div>
+            <button type="submit" style="padding:12px 20px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;align-self:flex-start;">Update Profile</button>
+        </form>
+    </div>
+
+    <!-- Change Password -->
+    <div style="background:white;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);padding:24px;">
+        <h3 style="margin:0 0 20px 0;font-size:16px;font-weight:700;">Change Password</h3>
+        <form method="POST" action="{{ url_for('admin_settings') }}" style="display:flex;flex-direction:column;gap:16px;">
+            <input type="hidden" name="action" value="change_password">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:13px;font-weight:600;color:#374151;">Current Password</label>
+                <input type="password" name="current_password" required style="padding:12px 14px;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;outline:none;" onfocus="this.style.borderColor='#2563EB'" onblur="this.style.borderColor='#D1D5DB'">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:13px;font-weight:600;color:#374151;">New Password</label>
+                <input type="password" name="new_password" required minlength="6" style="padding:12px 14px;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;outline:none;" onfocus="this.style.borderColor='#2563EB'" onblur="this.style.borderColor='#D1D5DB'">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:13px;font-weight:600;color:#374151;">Confirm Password</label>
+                <input type="password" name="confirm_password" required minlength="6" style="padding:12px 14px;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;outline:none;" onfocus="this.style.borderColor='#2563EB'" onblur="this.style.borderColor='#D1D5DB'">
+            </div>
+            <button type="submit" style="padding:12px 20px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;align-self:flex-start;">Update Password</button>
+        </form>
+
+        <div style="margin-top:30px;padding-top:20px;border-top:1px solid #E5E7EB;">
+            <h4 style="margin:0 0 12px 0;font-size:14px;font-weight:700;color:#374151;">System Info</h4>
+            <div style="font-size:13px;color:#6B7280;line-height:2;">
+                <div>Version: <strong>1.0.0</strong></div>
+                <div>Database: <strong>SQLite</strong></div>
+                <div>Session: <strong>Flask-Session</strong></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

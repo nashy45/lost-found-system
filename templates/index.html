@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Home - School Lost & Found Management System{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-container">
+        <div class="hero-text">
+            <span class="hero-tag"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 21v-8h6v8"/></svg> IUC School Lost & Found Management System</span>
+            <h1>Modern campus item recovery<br>for a smarter <span>IUC student experience</span></h1>
+          
+            <div class="hero-buttons">
+                <a href="{{ url_for('report') if session.get('user_id') else url_for('login') }}" class="primary-btn">Report an Item</a>
+                <a href="{{ url_for('browse') }}" class="secondary-btn">View Records</a>
+            </div>
+            <div class="hero-metrics">
+                <article class="metric-card"><strong>100%</strong><span>Campus-wide visibility</span></article>
+                <article class="metric-card"><strong>24/7</strong><span>Accessible reporting flow</span></article>
+                <article class="metric-card"><strong>Fast</strong><span>Staff review and claims process</span></article>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-panel main-panel"><img src="{{ url_for('static', filename='images/wallets.jpg') }}" alt=""><span>Lost items</span></div>
+            <div class="hero-panel small-panel"><img src="{{ url_for('static', filename='images/keys.jpg') }}" alt=""><span>Found items</span></div>
+            <div class="hero-panel small-panel"><img src="{{ url_for('static', filename='images/phone.jpg') }}" alt=""><span>Claims</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <span class="eyebrow">Project Highlights</span>
+        <h2>Designed for a professional academic project</h2>
+        <p>Every page is structured to reflect a real, usable school management system with clear information flow and elegant presentation.</p>
+    </div>
+    <div class="feature-grid">
+        <article class="info-card"><h3>Fast Reporting</h3><p>Students can submit item details, category, location, and status in a simple form.</p></article>
+        <article class="info-card"><h3>Clear Tracking</h3><p>Found and lost items are reviewed in one place, which improves accountability for the school office.</p></article>
+        <article class="info-card"><h3>Professional UI</h3><p>The design uses clean spacing, soft gradients, and modern card layouts to support presentation quality.</p></article>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <span class="eyebrow">System Flow</span>
+        <h2>How the system works</h2>
+    </div>
+    <div class="workflow-grid">
+        <article class="workflow-card"><strong>01</strong><h3>Report</h3><p>Students or staff report a lost or found item with relevant details.</p></article>
+        <article class="workflow-card"><strong>02</strong><h3>Review</h3><p>The school office checks item data and verifies its status.</p></article>
+        <article class="workflow-card"><strong>03</strong><h3>Claim</h3><p>Verified owners can recover the item through the school administration process.</p></article>
+    </div>
+</section>
+{% endblock %}
